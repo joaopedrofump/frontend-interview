@@ -1,0 +1,21 @@
+.button {
+  padding: var(--spacing1);
+  min-width: 75px;
+  font-size: var(--h5-size);
+  border-radius: 5px;
+}
+
+.button-primary {
+  background-color: var(--primarycolor);
+  border-color: var(--primarycolor);
+}
+
+.button-secondary {
+  background-color: var(--secondarycolor);
+  border-color: var(--secondarycolor);
+}
+
+.button-terciary {
+  background-color: var(--terciarycolor);
+  border-color: var(--terciarycolor);
+}

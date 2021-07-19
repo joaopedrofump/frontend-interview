@@ -1,0 +1,119 @@
+.games {
+  background-color: var(--lightgrey);
+  text-align: center;
+  padding: var(--spacing6);
+}
+
+.game {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.player-result {
+  width: 33%;
+}
+
+.player-result p {
+  font-size: var(--h4-size);
+  margin: var(--spacing1);
+}
+
+.current-player {
+  text-decoration: underline;
+  text-decoration-color: var(--secondarycolor);
+}
+
+.game-area {
+  width: 33%;
+}
+
+.settings {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.game-button {
+  margin-top: var(--spacing1);
+  margin-bottom: var(--spacing1);
+}
+
+.game-button-start button {
+  margin-right: var(--spacing2);
+  border-radius: 0;
+}
+
+.game-type button {
+  border-radius: 0;
+  border-color: var(--grey);
+}
+
+.game-type .selected {
+  background-color: var(--secondarycolor);
+}
+
+.undo {
+  margin-top: var(--spacing5);
+}
+
+.timer {
+  width: 100%;
+  margin-top: var(--spacing2);
+  font-size: var(--h4-size);
+}
+
+.feedback-visible {
+  opacity: 1;
+  transition: opacity 0.2s linear;
+}
+
+.feedback-hidden {
+  opacity: 0;
+  transition: opacity 0.2s linear;
+}
+
+.player-victory-congrats {
+  font-size: var(--h4-size);
+  text-align: center;
+}
+
+.select-size input {
+  height: 35px;
+  background-color: #fff;
+  border-radius: 3px;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin: 0;
+  box-shadow: none;
+  border-color: var(--grey);
+}
+
+@media (max-width:688px) {
+  .player1-result {
+    order: 2;
+    width: 100%;
+  }
+  .player2-result {
+    order: 4;
+    width: 100%;
+  }
+  .timer {
+    order: 3;
+  }
+  .game-area {
+    order:1;
+    width: 100%;
+  }
+  .settings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .game-button-start {
+    margin-right: 0;
+  }
+}
+

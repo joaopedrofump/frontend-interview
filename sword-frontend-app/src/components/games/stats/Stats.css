@@ -1,0 +1,92 @@
+.stats {
+  text-align: center;
+  padding: var(--spacing6);
+}
+
+.stats-info {
+  padding: var(--spacing3);
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.victories {
+  display: flex;
+  justify-content: space-between;
+}
+
+.player-label {
+  font-size: var(--h3-size);
+  margin-left: var(--spacing3);
+  margin-right: var(--spacing3);
+}
+
+.percentages {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--spacing2);
+}
+
+.percentage {
+  width: var(--spacing6);
+  height: var(--spacing6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--darkgrey);
+  color: #fff;
+  border-radius: 50%;
+  margin-left: var(--spacing2);
+  margin-right: var(--spacing2);
+  padding: var(--spacing1);
+}
+
+.v-label {
+  margin: var(--spacing1);
+}
+
+.played-games {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  justify-content: center;
+}
+
+.completed {
+  width: var(--spacing2);
+  height: var(--spacing2);
+  border-radius: 50%;
+  background-color: var(--darkgrey);
+  margin-left: 1px;
+  margin-right: 1px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--darkgrey);
+}
+
+.not-completed {
+  background-color: initial;
+}
+
+.played-game {
+  width: var(--spacing3);
+  height: var(--spacing3);
+  margin-left: 1px;
+  margin-right: 1px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--darkgrey);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width:688px) {
+  .stats-info {
+    flex-direction: column;
+  }
+  .percentages {
+    flex-direction: column;
+  }
+}
