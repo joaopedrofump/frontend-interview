@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import { Game, GameState } from '../GamesService';
-import { getDate } from './TimerService';
+import { Game, GameState } from '../model';
+import { getDate } from './TimerUtils';
 
 type Props = {
   gameState: GameState
@@ -10,13 +10,13 @@ type Props = {
 
 const Timer: React.FC<Props> = ({ gameState, games, setGames }) => {
   const [time, setTime] = useState<number>(0);
-  const interval = useRef<any>();
+  const interval = useRef<number>();
   const { hours, minutes, seconds } = getDate(time);
 
   useEffect(() => {
     if (gameState === 'running') {
       setTime(0);
-      interval.current = setInterval(() => setTime((prev: number) => prev + 1), 1000);
+      interval.current = Number(setInterval(() => setTime((prev: number) => prev + 1), 1000));
     } else {
       clearInterval(interval.current);
       if (gameState === 'paused') {

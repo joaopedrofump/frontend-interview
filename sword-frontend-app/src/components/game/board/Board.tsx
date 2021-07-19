@@ -1,10 +1,10 @@
 import clsx from 'clsx';
-import React, { KeyboardEventHandler, useCallback, useMemo } from 'react';
-import player1Img from '../../../assets/images/X_dark.svg';
+import React, { useMemo } from 'react';
+import player2ImgCorrect from '../../../assets/images/O_bright.svg';
 import player2Img from '../../../assets/images/O_dark.svg';
 import player1ImgCorrect from '../../../assets/images/X_bright.svg';
-import player2ImgCorrect from '../../../assets/images/O_bright.svg';
-import { Board as BoardModel, PositionFill, WinnerType } from '../GamesService';
+import player1Img from '../../../assets/images/X_dark.svg';
+import { Board as BoardModel, PositionFill, WinnerType } from '../model';
 import './Board.css';
 
 type Props = {
@@ -15,17 +15,21 @@ type Props = {
 
 const Board: React.FC<Props> = ({ board, makeMove, winner }) => {
   const play = useMemo(() => (line: number, column: number, value: PositionFill) => () => {
-    console.log('play');
     if (!makeMove) { return; }
     makeMove(line, column, value);
   }, [makeMove]);
 
-  const onKeyUp = useMemo(() => (line: number, column: number, value: PositionFill) => (event: React.KeyboardEvent<HTMLDivElement>) => {
-    console.log(event.key);
-    if (event.key === 'Enter' && makeMove) {
-      makeMove(line, column, value);
-    }
-  }, [makeMove]);
+  const onKeyUp = useMemo(
+    () => (
+      line: number,
+      column: number,
+      value: PositionFill
+    ) => (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'Enter' && makeMove) {
+        makeMove(line, column, value);
+      }
+    }, [makeMove]
+  );
 
   return (
     <table className="table">
@@ -36,10 +40,16 @@ const Board: React.FC<Props> = ({ board, makeMove, winner }) => {
               row.map((value: PositionFill, column: number) => {
                 let src;
 
-                const lineCondition = winner?.type === 'h' && line === winner?.index;
-                const columnCondition = winner?.type === 'v' && column === winner?.index;
-                const diag1Condition = winner?.type === 'd' && winner.index === 0 && line === column;
-                const diag2Condition = winner?.type === 'd' && winner.index === 1 && line === board.length - 1 - column;
+                const lineCondition = winner?.type === 'h'
+                  && line === winner?.index;
+                const columnCondition = winner?.type === 'v'
+                  && column === winner?.index;
+                const diag1Condition = winner?.type === 'd'
+                  && winner.index === 0
+                  && line === column;
+                const diag2Condition = winner?.type === 'd'
+                  && winner.index === 1
+                  && line === board.length - 1 - column;
 
                 if (lineCondition || columnCondition || diag1Condition || diag2Condition) {
                   src = value === 1 ? player1ImgCorrect : player2ImgCorrect;

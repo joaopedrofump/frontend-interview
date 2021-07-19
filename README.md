@@ -1,3 +1,20 @@
+# Test result overview
+
+  - *implemented*
+    - basic
+    - both bonus
+
+    - extra
+      - 4 in a row with variable size
+      - tic tac toe not only 3 or 6 or 9 but any size
+      - undo move
+      - draw counting
+
+  - *instructions*
+    1. cd sword-frontend-app
+    2. npm install
+    3. npm start
+
 # Front-End test
 
 Test package based on a repo
@@ -65,3 +82,5 @@ Select box to change game grid (3x3, 6x6, 9x9)
 ##### 4-in-a-row game
 - Filter on top of game section (3) to toggle game with this being 4-in-a-row.
 - Both games should be functional and respect the requirements stated above.
+
+

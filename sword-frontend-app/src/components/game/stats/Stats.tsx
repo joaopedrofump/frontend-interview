@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import React, { useMemo } from 'react';
-import { BEST_OF, Game } from '../GamesService';
-import { getDate } from '../timer/TimerService';
+import React from 'react';
+import { getDate } from '../timer/TimerUtils';
+import { BEST_OF, Game } from '../model';
 import './Stats.css';
 
 type Props = {
@@ -9,8 +9,12 @@ type Props = {
 }
 
 const Stats: React.FC<Props> = ({ games }) => {
-  const p1Percentage = (games.filter((game: Game) => (game.winner.player === 1)).length / games.length * 100);
-  const p2Percentage = (games.filter((game: Game) => (game.winner.player === 2)).length / games.length * 100);
+  const p1Percentage = (
+    games.filter((game: Game) => (game.winner.player === 1)).length / games.length * 100
+  );
+  const p2Percentage = (
+    games.filter((game: Game) => (game.winner.player === 2)).length / games.length * 100
+  );
   const dMatches = games.filter((game: Game) => game.winner.player === 0).length;
   const dPercentage = dMatches / games.length * 100;
 

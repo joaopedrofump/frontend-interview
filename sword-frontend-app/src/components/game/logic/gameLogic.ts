@@ -1,4 +1,4 @@
-import { Board, PositionFill, WinnerType } from "../GamesService";
+import { Board, GameLogic, PositionFill, WinnerType } from "../model";
 
 export const playTicTacToe = (
   board: Board,
@@ -7,7 +7,6 @@ export const playTicTacToe = (
   y: number,
   prev: PositionFill
 ): { newBoard?: Board; valid: boolean } => {
-  console.log({ x, y });
   if (x < 0 || x >= board.length || y < 0 || y >= board.length || prev !== 0) {
     return { valid: false };
   }
@@ -56,7 +55,9 @@ const checkDiagonals = (board: Board): { player: 0 | 1 | 2; index: number } => {
       return { player: 0, index: -1 };
     }
     diag1 = board[i][i] === diag1 ? board[i][i] : 0;
-    diag2 = board[i][board.length - 1 - i] === diag2 ? board[i][board.length - 1 - i] : 0;
+    diag2 = board[i][board.length - 1 - i] === diag2
+      ? board[i][board.length - 1 - i]
+      : 0;
   }
 
   if (diag1) {
@@ -65,9 +66,7 @@ const checkDiagonals = (board: Board): { player: 0 | 1 | 2; index: number } => {
   return { player: diag2, index: 1 };
 };
 
-export const checkWinner = (
-  board: Board
-): WinnerType => {
+export const checkWinner = (board: Board, moves: number): WinnerType => {
   const winnerLines = checkLinesOrColumns(board);
   if (winnerLines.player) {
     return { ...winnerLines, type: "h" };
@@ -78,10 +77,30 @@ export const checkWinner = (
     return { ...winnerCols, type: "v" };
   }
 
-  return { ...checkDiagonals(board), type: "d" };
+  const winnerDiag = checkDiagonals(board);
+  if (winnerDiag.player) {
+    return { ...winnerDiag, type: "d" };
+  }
+
+  if (moves >= board.length * board.length) {
+    return {
+      type: "v",
+      index: -1,
+      player: 0,
+      draw: true,
+    };
+  }
+
+  return { player: 0, type: 'h', index: -1 };
 };
 
-export const play4InaRow = (board: Board, player: 1 | 2, x: number, y: number, prev: PositionFill) : { newBoard?: Board; valid: boolean } => {
+export const play4InaRow = (
+  board: Board,
+  player: 1 | 2,
+  x: number,
+  y: number,
+  prev: PositionFill
+): { newBoard?: Board; valid: boolean } => {
   if (x < 0 || x >= board.length || y < 0 || y >= board.length || prev !== 0) {
     return { valid: false };
   }
@@ -93,13 +112,20 @@ export const play4InaRow = (board: Board, player: 1 | 2, x: number, y: number, p
 
   for (let i = board.length - 1; i >= 0; i--) {
     if (newBoard[i][y] === 0) {
-      console.log(newBoard[i][y]);
       newBoard[i][y] = player;
       break;
     }
   }
 
-  console.log(newBoard);
-
   return { newBoard: [...newBoard], valid: true };
+};
+
+export const ticTacToeLogic: GameLogic = {
+  checkWinner,
+  play: playTicTacToe,
+};
+
+export const fourInaRowLogic: GameLogic = {
+  checkWinner,
+  play: play4InaRow,
 };

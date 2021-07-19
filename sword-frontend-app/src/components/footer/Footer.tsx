@@ -1,9 +1,8 @@
-import clsx from 'clsx';
-import React, { ForwardedRef } from 'react';
+import React from 'react';
 import fb from '../../assets/images/facebook.svg';
 import twitter from '../../assets/images/instagram.svg';
-import insta from '../../assets/images/twitter.svg';
 import send from '../../assets/images/send.svg';
+import insta from '../../assets/images/twitter.svg';
 import './Footer.css';
 
 const Footer: React.FC = () => (

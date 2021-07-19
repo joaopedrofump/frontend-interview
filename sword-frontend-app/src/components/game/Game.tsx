@@ -1,13 +1,22 @@
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Button from '../templates/button/Button';
-import './Games.css';
-import { BEST_OF, Board as BoardModel, GameType, createBoard, Game, GameBoard, GameState, MIN_WINS, TTT, WinnerType, GameName, FIAR } from './GamesService';
+import './Game.css';
 import Stats from './stats/Stats';
 import Board from './board/Board';
-import TicTacToe from './tic-tac-toe/TicTacToe';
 import Timer from './timer/Timer';
-import { checkWinner } from './tic-tac-toe/TicTacToeService';
+import {
+  GameBoard,
+  GameType, Game as GameModel,
+  FIAR,
+  GameName,
+  GameState,
+  MIN_WINS,
+  TTT,
+  WinnerType, Board as BoardModel
+} from './model';
+import { createBoard } from './utils';
+import { useGameLogic } from './logic/useGameLogic';
 
 const getBraNdNewGameBoard = (size: string, gt: GameType): GameBoard[] => {
   const parsed = Number(size);
@@ -19,14 +28,20 @@ const getBraNdNewGameBoard = (size: string, gt: GameType): GameBoard[] => {
   }];
 };
 
-const Games: React.FC = () => {
+const Game: React.FC = () => {
   const [gameType, setGameType] = useState<GameType>(TTT);
   const [boardSize, setBoardSize] = useState<string>(String(gameType.default));
-  const [gameBoards, setGameBoards] = useState<GameBoard[]>(getBraNdNewGameBoard(String(gameType.default), gameType));
-  const [games, setGames] = useState<Game[]>([]);
+  const [gameBoards, setGameBoards] = useState<GameBoard[]>(
+    getBraNdNewGameBoard(String(gameType.default), gameType)
+  );
+  const [games, setGames] = useState<GameModel[]>([]);
   const currentGame = useMemo(() => gameBoards[gameBoards.length - 1], [gameBoards]);
-  const p1Result = useMemo(() => games.filter(({ winner: { player } }) => player === 1).length, [games]);
-  const p2Result = useMemo(() => games.filter(({ winner: { player } }) => player === 2).length, [games]);
+  const p1Result = useMemo(
+    () => games.filter(({ winner: { player } }) => player === 1).length, [games]
+  );
+  const p2Result = useMemo(
+    () => games.filter(({ winner: { player } }) => player === 2).length, [games]
+  );
   const [winner, setWinner] = useState<WinnerType>();
   const [gameState, setGameState] = useState<GameState>('paused');
   const setTTT = useCallback(() => {
@@ -71,7 +86,7 @@ const Games: React.FC = () => {
     if (winner) { return; }
     setWinner(newWinner);
     setGameState('finished');
-    setGames((prev: Game[]) => ([...prev, { winner: newWinner }]));
+    setGames((prev: GameModel[]) => ([...prev, { winner: newWinner }]));
   }, [winner]);
 
   const handleStart = (): void => {
@@ -101,6 +116,12 @@ const Games: React.FC = () => {
       statsRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [p1W, p2W]);
+
+  const makeMove = useGameLogic(
+    currentGame, updateWinner,
+    updateBoard, gameType.gameLogic,
+    gameBoards.length - 1
+  );
 
   return (
     <>
@@ -148,11 +169,21 @@ const Games: React.FC = () => {
           </div>
           <div className="player-result player1-result">
             <div className="game-button undo">
-              <Button disabled={currentGame?.currentPlayer === 1 || gameState !== 'running'} onClick={undoMove} color="primary">
+              <Button
+                disabled={currentGame?.currentPlayer === 1 || gameState !== 'running'}
+                onClick={undoMove}
+                color="primary"
+              >
                 Undo
               </Button>
             </div>
-            <p className={clsx({ 'current-player': currentGame.currentPlayer === 1 && gameState === 'running' })}>Player 1</p>
+            <p
+              className={clsx(
+                { 'current-player': currentGame.currentPlayer === 1 && gameState === 'running' }
+              )}
+            >
+              Player 1
+            </p>
             <p>{p1Result}</p>
           </div>
           <div className="game-area">
@@ -163,22 +194,42 @@ const Games: React.FC = () => {
             >
               {
                 winner?.player === 1 || winner?.player === 2
-                  ? <span>{`Player ${winner.player} won this one, press start to play next game. First with ${MIN_WINS} wins!`}</span>
+                  ? (
+                    <span>
+                      {`Player ${winner.player} won this one, 
+                      press start to play next game. First with ${MIN_WINS} wins!`}
+                    </span>
+                  )
                   : null
               }
-              {winner?.player === 0 ? <span>This one was a tie, press start to play again.</span> : ' Do your best!'}
+              {winner?.player === 0
+                ? (
+                  <span>This one was a tie, press start to play again.</span>
+                ) : ' Do your best!'}
             </p>
-            {gameState !== 'paused'
-              ? <TicTacToe gameName={gameType.name} winner={winner} setWinner={updateWinner} board={currentGame} updateGameBoard={updateBoard} />
-              : <Board board={currentGame.board} />}
+            <Board winner={winner} board={currentGame.board} makeMove={makeMove} />
           </div>
           <div className="player-result player2-result">
             <div className="game-button undo">
-              <Button disabled={currentGame?.currentPlayer === 2 || gameBoards.length < 2 || gameState !== 'running'} onClick={undoMove} color="primary">
+              <Button
+                disabled={
+                  currentGame?.currentPlayer === 2
+                  || gameBoards.length < 2
+                  || gameState !== 'running'
+                }
+                onClick={undoMove}
+                color="primary"
+              >
                 Undo
               </Button>
             </div>
-            <p className={clsx({ 'current-player': currentGame.currentPlayer === 2 && gameState === 'running' })}>Player 2</p>
+            <p
+              className={clsx(
+                { 'current-player': currentGame.currentPlayer === 2 && gameState === 'running' }
+              )}
+            >
+              Player 2
+            </p>
             <p>{p2Result}</p>
           </div>
           <div className="timer">
@@ -188,7 +239,14 @@ const Games: React.FC = () => {
         <div ref={statsRef}>
           {
             p1W || p2W
-              ? <p className="player-victory-congrats">{`Congrats P${p1W ? '1' : '2'}, you are the winner. Check stats. If feel like playing again scroll up and start a new game!`}</p>
+              ? (
+                <p
+                  className="player-victory-congrats"
+                >
+                  {`Congrats P${p1W ? '1' : '2'}, you are the winner. 
+                Check stats. If feel like playing again scroll up and start a new game!`}
+                </p>
+              )
               : null
           }
         </div>
@@ -198,4 +256,4 @@ const Games: React.FC = () => {
   );
 };
 
-export default Games;
+export default Game;
